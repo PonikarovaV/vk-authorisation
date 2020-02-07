@@ -64,16 +64,6 @@ function getToken() {
     return token, userID;
 }
 
-function vkLogout() {
-    VK.Auth.getLoginStatus(function(response) {
-        if (response.status == 'connected') {
-            VK.Auth.logout(function() {
-                window.location.replace('https://ponikarovav.github.io/vk-authorisation/');
-            });
-        }
-    });
-}
-
 function declination(number, titles) {
     const cases = [2, 0, 1, 1, 1, 2];
     return titles[ (number%100>4 && number%100<20)? 2:cases[(number%10<5)?number%10:5] ];
@@ -81,11 +71,21 @@ function declination(number, titles) {
 
 function showFriends(token) {
     sendRequest(`https://api.vk.com/method/friends.search?count=100&fields=photo_100&access_token=${token}&v=5.103`, function(data) {
-        console.log(data);
         friendsCounter.textContent = `${data.response.count} ${declination(data.response.count, [' друг', ' друга', ' друзей'] )}`;
         friendList.render(data.response.items);
     });
 };
+
+function vkLogout() {
+    VK.Auth.getLoginStatus(function(response) {
+        if (response.status == 'connected') {
+            console.log(response.status);
+            VK.Auth.logout(function() {
+                window.location.replace('https://ponikarovav.github.io/vk-authorisation/');
+            });
+        }
+    });
+}
 
 buttonFriands.addEventListener('click', () => {
     showFriends(token);
