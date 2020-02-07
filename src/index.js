@@ -12,7 +12,7 @@ const searchInput = document.querySelector('.search__input');
 const friendContainer = document.querySelector('.friendlist');
 const searchContainer = document.querySelector('.searchlist');
 const friendsCounter = document.querySelector('.friends__title');
-const vkRequest = 'https://oauth.vk.com/authorize?client_id=7306827&display=popup&redirect_uri=http://localhost:8080/&scope=friends,status&response_type=token&v=5.103&state=123456';
+const vkRequest = 'https://oauth.vk.com/authorize?client_id=7306827&display=popup&redirect_uri=https://ponikarovav.github.io/vk-authorisation/&scope=friends,status&response_type=token&v=5.103&state=123456';
 
 let token;
 let userID;
@@ -67,7 +67,7 @@ function vkLogout() {
     VK.Auth.getLoginStatus(function(response) {
         if (response.status == 'connected') {
             VK.Auth.logout(function() {
-                window.location.replace('http://localhost:8080/');
+                window.location.replace('https://ponikarovav.github.io/vk-authorisation/');
             });
         }
     });

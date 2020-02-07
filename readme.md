@@ -2,7 +2,7 @@
 
 Тестовый проект. Авторизация на сайте через ВК, получение данных пользователя из соцсети.
 
-[Ссылка на проект]()
+[Ссылка на проект](https://ponikarovav.github.io/vk-authorisation/)
 
 ## Задачи проекта
 
@@ -31,7 +31,7 @@
 
 Склонируйте репозиторий
 ```
-git clone 
+git clone https://github.com/PonikarovaV/vk-authorisation.git
 ```
 Установите зависимости
 ```
