@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Authorisation</title>
+  <link rel="stylesheet" href="<%=htmlWebpackPlugin.files.chunks.main.css %>">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
+  <script src="https://vk.com/js/api/openapi.js?166" type="text/javascript"></script>
+</head>
+
+<body class="page">
+    <script type="text/javascript">
+        VK.init({
+          apiId: 7306827
+        });
+      </script>
+
+    <section class="profile">
+        <form class="search" action="" method="get" name="search">
+            <input class="search__input" name="searchFriend" placeholder="Найти друга" type="search">
+            <button class="search__button" type="submit">Найти</button>
+        </form>
+        <ul class="searchlist">
+
+        </ul>
+        <h2 class="profile__title">Мой социальный профиль</h2>
+        <div class="profile__image"></div>
+        <p class="profile__name">Котиков любят все</p>
+        <div class="profile__buttons">
+            <a class="button button_type_authorisation button-text" href="">Авторизоваться</a>
+            <button class="button button_type_exit button-text">Выйти</button>
+        </div>
+    </section>
+    <section class="friends">
+        <button class="button button_type_friends button-text">Мои друзья</button>
+        <h2 class="friends__title"></h2>
+        <ul class="friendlist">
+
+        </ul>
+    </section>
+
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="<%= htmlWebpackPlugin.files.chunks.main.entry %>"></script>
+</body>
+
+</html>
