@@ -50,7 +50,4 @@ npm run build
 Выложить сайт на сервер
 ```
 npm run deploy
-```# vk-authorisation
-# vk-authorisation
-# social-authorisation
-# social-authorisation
+```
