@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Authorisation</title>
-  <link rel="stylesheet" href="style.1be4c7d3b226821e511a.css">
+  <link rel="stylesheet" href="style.3b2f74df9dd95c9a770c.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap">
   <script src="https://vk.com/js/api/openapi.js?166" type="text/javascript"></script>
 </head>
@@ -20,7 +20,8 @@
 
     <section class="profile">
         <form class="search" action="" method="get" name="search">
-            <input class="search__input" name="searchFriend" placeholder="Найти друга" type="search">
+            <input class="search__input" name="searchFriend" placeholder="Найти друга" type="search" pattern="[а-яёА-ЯЁa-zA-Z0-9]+" minlength="2" maxlength="30" required>
+            <span class="search__error search__error_inactive">Введите имя</span>
             <button class="search__button" type="submit">Найти</button>
         </form>
         <ul class="searchlist">
