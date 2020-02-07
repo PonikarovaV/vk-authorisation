@@ -83,6 +83,10 @@
     color: #f8af42;
 }
 
+.button_inactive {
+    display: none;
+}
+
 .button.button_type_authorisation {
     margin-bottom: 30px;
 }
@@ -201,6 +205,10 @@
     align-items: center;
 }
 
+.search_hidden {
+    display: none;
+}
+
 .search__input {
     box-sizing: border-box;
     margin: 0 auto 20px;
@@ -214,6 +222,22 @@
     font-size: 22px;
     line-height: 1.2;
     font-weight: 400;
+}
+
+.serch__input_invalid {
+    border: 1px color red;
+}
+
+.search__error {
+    align-self: flex-start;
+    color: red;
+    font-size: 26px;
+    line-height: 1.2;
+    font-weight: 600;
+}
+
+.search__error_inactive {
+    opacity: 0;
 }
 
 .search__button {

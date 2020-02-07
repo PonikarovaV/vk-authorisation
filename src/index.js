@@ -4,34 +4,59 @@ import {
     FriendList
 } from './scripts/Friend.js';
 
+import {
+    Validation
+} from './scripts/Validation';
+
 const $ = require("jquery");
 const buttonFriands = document.querySelector('.button_type_friends');
 const buttonAuthorisation = document.querySelector('.button_type_authorisation');
 const buttonExit = document.querySelector('.button_type_exit');
 const searchButton = document.querySelector('.search__button');
 const searchInput = document.querySelector('.search__input');
+const errorMessage = document.querySelector('.search__error');
 const friendContainer = document.querySelector('.friendlist');
 const searchContainer = document.querySelector('.searchlist');
 const friendsCounter = document.querySelector('.friends__title');
+const formSearch = document.querySelector('.search');
 const vkRequest = 'https://oauth.vk.com/authorize?client_id=7311225&display=popup&redirect_uri=https://ponikarovav.github.io/vk-authorisation/&scope=friends,status&response_type=token&v=5.103&state=123456';
 
+
+// новые токен и id при авторизации
 let token;
 let userID;
 
+// список карточек с друзьями
 const friendList = new FriendList({
     container: friendContainer,
     blockName: 'friendlist'
 });
 
+// список карточек найденных друзей
 const searchList = new FriendList({
     container: searchContainer,
     blockName: 'searchlist'
 });
 
-function checkUrl() {
-    let regexpToken = /(#access_token=)([a-z0-9]+)\&/g;
+// создание экземпляра класса для валидации формы search
+const searchValidity = new Validation({
+    form: formSearch,
+    input: searchInput,
+    button: searchButton,
+    errorField: errorMessage
+});
 
-    if (window.location.hash.match(regexpToken)) {
+// проверка авторизации при загрузке страницы
+VK.Auth.getLoginStatus((res) => {
+
+    if (res.status === 'not_authorized') {
+        buttonExit.classList.add('button_inactive');
+        buttonFriands.classList.add('button_inactive');
+        formSearch.classList.add('search_hidden');
+    }
+
+    if (res.status === 'connected') {
+        buttonAuthorisation.classList.add('button_inactive');
         getToken();
         sendRequest(`https://api.vk.com/method/users.get?fields=photo_200&user_id=${userID}&access_token=${token}&v=5.103`, function(data) {
             let container = document.querySelector('.profile__name');
@@ -40,10 +65,10 @@ function checkUrl() {
             userPhoto.style.backgroundImage = `url('${data.response[0].photo_200}')`;
         });
     }
-}
 
-checkUrl();
+});
 
+// запрос данных с сервера
 function sendRequest(url, foo) {
     return $.ajax({
         url: url,
@@ -53,6 +78,7 @@ function sendRequest(url, foo) {
     })
 }
 
+// получение токена и id пользователя при авторизации
 function getToken() {
     let regexpToken = /(#access_token=)([a-z0-9]+)\&/g;
     let regexpUserID = /(user_id=)([0-9]+)\&/g;
@@ -64,52 +90,54 @@ function getToken() {
     return token, userID;
 }
 
+// склонение "друг" в зависимости от количества друзей
 function declination(number, titles) {
     const cases = [2, 0, 1, 1, 1, 2];
     return titles[ (number%100>4 && number%100<20)? 2:cases[(number%10<5)?number%10:5] ];
-};
+}
 
+// показать список друзей
 function showFriends(token) {
     sendRequest(`https://api.vk.com/method/friends.search?count=100&fields=photo_100&access_token=${token}&v=5.103`, function(data) {
         friendsCounter.textContent = `${data.response.count} ${declination(data.response.count, [' друг', ' друга', ' друзей'] )}`;
         friendList.render(data.response.items);
     });
-};
-
-function vkLogout() {
-    VK.Auth.getLoginStatus(function(response) {
-        if (response.status == 'connected') {
-            console.log(response.status);
-            VK.Auth.logout(function() {
-                window.location.replace('https://ponikarovav.github.io/vk-authorisation/');
-            });
-        }
-    });
 }
 
-buttonFriands.addEventListener('click', () => {
-    showFriends(token);
-});
-
+// слушатель на кнопку авторизации
 buttonAuthorisation.addEventListener('click', (event) => {
     event.preventDefault();
     window.location = vkRequest;
 });
 
-searchButton.addEventListener('click', (event) => {
-    event.preventDefault();
-    sendRequest(`https://api.vk.com/method/friends.search?count=1000&fields=photo_100&access_token=${token}&v=5.103`, function(data) {
+// слушатель на кнопку Показать друзей
+buttonFriands.addEventListener('click', () => {
+    showFriends(token);
+});
 
-        let name = searchInput.value;
-        let friends = data.response.items;
-        let friendsList = friends.filter(el => {
-            return el.first_name.toLowerCase().includes(name.toLowerCase());
+// слушатель на форму поиска друзей
+formSearch.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (searchInput.validity.valid) {
+        sendRequest(`https://api.vk.com/method/friends.search?count=1000&fields=photo_100&access_token=${token}&v=5.103`, function(data) {
+            let name = searchInput.value;
+            let friends = data.response.items;
+            let friendsList = friends.filter(el => {
+                return el.first_name.toLowerCase().includes(name.toLowerCase());
+            });
+            searchList.render(friendsList);
+
+            formSearch.reset();
         });
-        searchList.render(friendsList);
+    }
+});
+
+// слушатель на кнопку выхода
+buttonExit.addEventListener('click', () => {
+    VK.Auth.logout(function() {
+        window.location.replace('https://ponikarovav.github.io/vk-authorisation/');
     });
 });
 
-buttonExit.addEventListener('click', () => {
-    vkLogout();
-});
-
+// вызов метода класса валидации
+searchValidity.setEventListeners();
