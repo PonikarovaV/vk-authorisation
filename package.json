@@ -7,7 +7,7 @@
   "scripts": {
     "build": "NODE_ENV=production rimraf dist && webpack --mode production",
     "dev": "NODE_ENV=development webpack-dev-server --mode development --open --watch",
-    "deploy": "gh-pages -d dist" 
+    "deploy": "cross-env NODE_ENV=production gh-pages -d dist"
   },
   "author": "Vanda Ponikarova",
   "license": "ISC",
