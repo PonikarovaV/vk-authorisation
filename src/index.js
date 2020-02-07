@@ -4,6 +4,7 @@ import {
     FriendList
 } from './scripts/Friend.js';
 
+const $ = require("jquery");
 const buttonFriands = document.querySelector('.button_type_friends');
 const buttonAuthorisation = document.querySelector('.button_type_authorisation');
 const buttonExit = document.querySelector('.button_type_exit');
@@ -12,7 +13,7 @@ const searchInput = document.querySelector('.search__input');
 const friendContainer = document.querySelector('.friendlist');
 const searchContainer = document.querySelector('.searchlist');
 const friendsCounter = document.querySelector('.friends__title');
-const vkRequest = 'https://oauth.vk.com/authorize?client_id=7306827&display=popup&redirect_uri=https://ponikarovav.github.io/vk-authorisation/&scope=friends,status&response_type=token&v=5.103&state=123456';
+const vkRequest = 'https://oauth.vk.com/authorize?client_id=7311225&display=popup&redirect_uri=https://ponikarovav.github.io/vk-authorisation/&scope=friends,status&response_type=token&v=5.103&state=123456';
 
 let token;
 let userID;
@@ -72,7 +73,6 @@ function vkLogout() {
         }
     });
 }
-
 
 function declination(number, titles) {
     const cases = [2, 0, 1, 1, 1, 2];

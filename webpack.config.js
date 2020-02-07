@@ -7,6 +7,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const webpack = require('webpack');
 
 
+
 module.exports = {
     entry: { main: './src/index.js' },
     output: {
@@ -88,6 +89,9 @@ module.exports = {
         new WebpackMd5Hash(),
         new webpack.DefinePlugin({
             'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        }),
+        new webpack.ProvidePlugin({
+            '$': 'jquery',
         })
     ]
 }
