@@ -1,4 +1,4 @@
-console.log('v0.0.1');
+console.log('v0.0.2');
 
 import './styles/style.css';
 
@@ -21,7 +21,7 @@ const friendContainer = document.querySelector('.friendlist');
 const searchContainer = document.querySelector('.searchlist');
 const friendsCounter = document.querySelector('.friends__title');
 const formSearch = document.querySelector('.search');
-const vkRequest = 'https://oauth.vk.com/authorize?client_id=7311225&display=popup&redirect_uri=https://ponikarovav.github.io/vk-authorisation/&scope=friends,status&response_type=token&v=5.103&state=123456';
+const vkRequest = 'https://oauth.vk.com/authorize?client_id=7312315&display=popup&redirect_uri=https://ponikarovav.github.io/vk-authorisation/&scope=friends,status&response_type=token&v=5.103&state=123456';
 
 
 // новые токен и id при авторизации
@@ -48,6 +48,30 @@ const searchValidity = new Validation({
     errorField: errorMessage
 });
 
+// проверка авторизации при загрузке страницы
+function checkHash() {
+    let regexpToken = /(#access_token=)([a-z0-9]+)\&/g;
+
+    if (window.location.hash.match(regexpToken)) {
+        getToken();
+        sendRequest(`https://api.vk.com/method/users.get?fields=photo_200&user_id=${userID}&access_token=${token}&v=5.103`, function(data) {
+            let container = document.querySelector('.profile__name');
+            let userPhoto = document.querySelector('.profile__image');
+            buttonAuthorisation.classList.add('button_inactive');
+            container.textContent = `${data.response[0].first_name} ${data.response[0].last_name}`;
+            userPhoto.style.backgroundImage = `url('${data.response[0].photo_200}')`;
+        });
+    }
+
+    if (!(window.location.hash.match(regexpToken))) {
+        buttonExit.classList.add('button_inactive');
+        buttonFriands.classList.add('button_inactive');
+        formSearch.classList.add('search_hidden');
+    }
+}
+
+checkHash();
+
 // получение токена и id пользователя при авторизации
 function getToken() {
     let regexpToken = /(#access_token=)([a-z0-9]+)\&/g;
@@ -59,27 +83,6 @@ function getToken() {
 
     return token, userID;
 }
-
-// проверка авторизации при загрузке страницы
-
-    VK.Auth.getLoginStatus((res) => {
-        if (res.status === 'not_authorized') {
-            buttonExit.classList.add('button_inactive');
-            buttonFriands.classList.add('button_inactive');
-            formSearch.classList.add('search_hidden');
-        }
-    
-        if (res.status === 'connected') {
-            buttonAuthorisation.classList.add('button_inactive');
-            getToken();
-            sendRequest(`https://api.vk.com/method/users.get?fields=photo_200&user_id=${userID}&access_token=${token}&v=5.103`, function(data) {
-                let container = document.querySelector('.profile__name');
-                let userPhoto = document.querySelector('.profile__image');
-                container.textContent = `${data.response[0].first_name} ${data.response[0].last_name}`;
-                userPhoto.style.backgroundImage = `url('${data.response[0].photo_200}')`;
-            });
-        }
-    });
 
 // запрос данных с сервера
 function sendRequest(url, foo) {
@@ -135,8 +138,12 @@ formSearch.addEventListener('submit', (event) => {
 
 // слушатель на кнопку выхода
 buttonExit.addEventListener('click', () => {
-    VK.Auth.logout(function() {
-        window.location.replace('https://ponikarovav.github.io/vk-authorisation/');
+    VK.Auth.getLoginStatus((res) => {
+        if (res.status === 'connected') {
+            VK.Auth.logout(function() {
+                window.location.replace('https://ponikarovav.github.io/vk-authorisation/');
+            });
+        }
     });
 });
 

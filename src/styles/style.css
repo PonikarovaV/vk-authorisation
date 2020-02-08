@@ -229,11 +229,12 @@
 }
 
 .search__error {
+    margin: 0;
     align-self: flex-start;
     color: red;
-    font-size: 26px;
-    line-height: 1.2;
-    font-weight: 600;
+    font-size: 16px;
+    line-height: 1;
+    font-weight: 400;
 }
 
 .search__error_inactive {
