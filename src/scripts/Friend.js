@@ -6,7 +6,7 @@ class FriendList {
 
     // применение метода к элементу массива
     render(friendsList) {
-        cleanGallery();
+        this.cleanGallery();
         friendsList.forEach( el => this.addToList(el) );
     }
 
