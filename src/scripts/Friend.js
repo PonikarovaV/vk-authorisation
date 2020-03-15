@@ -6,7 +6,14 @@ class FriendList {
 
     // применение метода к элементу массива
     render(friendsList) {
+        cleanGallery();
         friendsList.forEach( el => this.addToList(el) );
+    }
+
+    cleanGallery() {
+        while (this.container.firstChild) {
+            this.container.removeChild(this.container.firstChild);
+        }
     }
 
     // получение карточки друга и вставка в разметку
